@@ -47,3 +47,5 @@ USER snapcast
 EXPOSE 1704
 
 WORKDIR /home/snapcast
+
+CMD /usr/bin/snapserver
