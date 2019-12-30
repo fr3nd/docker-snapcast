@@ -1,3 +1,22 @@
+FROM debian:buster-slim as librespot-builder
+
+
+ENV LIBRESPOT_VERSION v0.1.0
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      alsa-utils \
+      build-essential \
+      libasound2-dev \
+      libsdl2-dev \
+      curl \
+      git
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin/:${PATH}"
+RUN git clone https://github.com/librespot-org/librespot.git && \
+    cd librespot && \
+    git checkout $LIBRESPOT_VERSION && \
+    cargo build --release --no-default-features --features alsa-backend
+
 FROM debian:buster-slim
 
 ENV SNAPCAST_VERSION v0.17.1
@@ -48,6 +67,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     rm -rf /usr/local/include/boost && \
     rm -rf /usr/local/lib/libboost* && \
     rm -rf /usr/local/lib/cmake
+
+COPY --from=librespot-builder /librespot/target/release/librespot /usr/local/bin
 
 RUN useradd --system --uid 666 -M --shell /usr/sbin/nologin snapcast && \
     usermod -G audio,sudo snapcast && \
