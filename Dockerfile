@@ -1,8 +1,6 @@
 FROM debian:buster-slim
 
-# Latest version is v0.17.1 requires libboost 1.70.0 and it's not yet in buster
-# see https://github.com/badaix/snapcast/issues/488
-ENV SNAPCAST_VERSION v0.15.0
+ENV SNAPCAST_VERSION v0.17.1
 
 WORKDIR /src
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -12,34 +10,47 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       git \
       libasound2-dev \
       libavahi-client-dev \
-      libboost-all-dev  \
       libflac-dev \
       libopus-dev \
       libvorbis-dev \
       libvorbisidec-dev \
-    && \
+      wget \
+  && \
+    wget https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.gz && \
+    tar xvzf boost_1_72_0.tar.gz && \
+    cd boost_1_72_0 && \
+    ./bootstrap.sh && \
+    ./b2 install && \
+    cd .. \
+  && \
     git clone --recursive https://github.com/badaix/snapcast.git && \
     cd snapcast && \
     git checkout $SNAPCAST_VERSION && \
     git submodule update && \
     make && \
     install -D -g root -o root server/snapserver /usr/bin/snapserver && \
-    install -D -g root -o root client/snapclient /usr/bin/snapclient && \
+    install -D -g root -o root client/snapclient /usr/bin/snapclient \
+  && \
     apt-get -y purge \
       build-essential \
       git \
+      wget \
       $(dpkg -l|grep -- -dev |awk '{print $2}'|grep ^lib|awk -F: '{print $1}' ) \
-    && \
+  && \
     apt-get clean all && \
     rm -rf /usr/share/doc/* && \
     rm -rf /usr/share/info/* && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/* && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -rf /src/snapcast && \
-    cd ..
+    rm -rf /src && \
+    mkdir /src && \
+    rm -rf /usr/local/include/boost && \
+    rm -rf /usr/local/lib/libboost* && \
+    rm -rf /usr/local/lib/cmake
 
 RUN useradd --system --uid 666 -M --shell /usr/sbin/nologin snapcast && \
+    usermod -G audio,sudo snapcast && \
     mkdir -p /home/snapcast/.config && \
     chown snapcast:snapcast -R /home/snapcast
 USER snapcast
