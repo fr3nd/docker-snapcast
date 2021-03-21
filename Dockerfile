@@ -29,12 +29,14 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       git \
       libasound2-dev \
       libavahi-client-dev \
+      libexpat1-dev \
       libflac-dev \
       libopus-dev \
       libsox-dev \
       libsoxr-dev \
       libvorbis-dev \
       libvorbisidec-dev \
+      libpulse-dev \
       wget \
   && \
     wget https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.gz && \
@@ -50,9 +52,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git submodule update && \
     make && \
     install -D -g root -o root server/snapserver /usr/bin/snapserver && \
-    install -D -g root -o root client/snapclient /usr/bin/snapclient && \
-    mkdir -p /var/www/html && \
-    cp server/etc/interface.html /var/www/html/ \
+    install -D -g root -o root client/snapclient /usr/bin/snapclient \
   && \
     apt-get -y purge \
       build-essential \
