@@ -1,7 +1,7 @@
 FROM debian:buster-slim as librespot-builder
 
 
-ENV LIBRESPOT_VERSION v0.1.1
+ENV LIBRESPOT_VERSION v0.1.6
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       alsa-utils \
@@ -19,7 +19,7 @@ RUN git clone https://github.com/librespot-org/librespot.git && \
 
 FROM debian:buster-slim
 
-ENV SNAPCAST_VERSION v0.20.0
+ENV SNAPCAST_VERSION v0.24.0
 
 WORKDIR /src
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
