@@ -51,8 +51,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git checkout $SNAPCAST_VERSION && \
     git submodule update && \
     make && \
-    install -D -g root -o root server/snapserver /usr/bin/snapserver && \
-    install -D -g root -o root client/snapclient /usr/bin/snapclient \
+    make installserver && \
+    make installclient \
   && \
     apt-get -y purge \
       build-essential \
