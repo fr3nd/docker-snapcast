@@ -1,7 +1,6 @@
 FROM debian:buster-slim as librespot-builder
 
-
-ENV LIBRESPOT_VERSION v0.1.6
+ENV LIBRESPOT_VERSION v0.3.1
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       alsa-utils \
@@ -19,7 +18,7 @@ RUN git clone https://github.com/librespot-org/librespot.git && \
 
 FROM debian:buster-slim
 
-ENV SNAPCAST_VERSION v0.24.0
+ENV SNAPCAST_VERSION v0.26.0
 
 WORKDIR /src
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -39,9 +38,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       libpulse-dev \
       wget \
   && \
-    wget https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.gz && \
-    tar xvzf boost_1_72_0.tar.gz && \
-    cd boost_1_72_0 && \
+    wget https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz && \
+    tar xvzf boost_1_78_0.tar.gz && \
+    cd boost_1_78_0 && \
     ./bootstrap.sh && \
     ./b2 install && \
     cd .. \
