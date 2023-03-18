@@ -18,7 +18,7 @@ RUN git clone https://github.com/librespot-org/librespot.git && \
 
 FROM debian:buster-slim
 
-ENV SNAPCAST_VERSION v0.26.0
+ENV SNAPCAST_VERSION v0.27.0
 
 WORKDIR /src
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
