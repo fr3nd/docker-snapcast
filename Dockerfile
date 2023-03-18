@@ -38,9 +38,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       libpulse-dev \
       wget \
   && \
-    wget https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz && \
-    tar xvzf boost_1_78_0.tar.gz && \
-    cd boost_1_78_0 && \
+    wget https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.gz && \
+    tar xvzf boost_1_81_0.tar.gz && \
+    cd boost_1_81_0 && \
     ./bootstrap.sh && \
     ./b2 install && \
     cd .. \
@@ -50,8 +50,12 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git checkout $SNAPCAST_VERSION && \
     git submodule update && \
     make && \
-    make installserver && \
-    make installclient \
+    cd server && \
+    make installfiles && \
+    cd - && \
+    cd server && \
+    make installfiles && \
+    cd - \
   && \
     apt-get -y purge \
       build-essential \
